@@ -46,15 +46,19 @@ class KNNClassifier(object):
 
         n_test = x_test.shape[0]
         y_pred = torch.zeros(n_test, dtype=torch.int64)
+        k_nearest=np.argsort(dist_matrix)[:,list(range(self.k))]
+        
+        k_classes = np.vectorize(lambda x:self.y_train[x])(k_nearest)
+        
 
         for i in range(n_test):
-            # TODO:
-            # - Find indices of k-nearest neighbors of test sample i
-            # - Set y_pred[i] to the most common class among them
+#             # TODO:
+#             # - Find indices of k-nearest neighbors of test sample i
+#             # - Set y_pred[i] to the most common class among them
 
-            # ====== YOUR CODE: ======
-            raise NotImplementedError()
-            # ========================
+#             # ====== YOUR CODE: ======
+            y_pred[i]=int(np.argmax(np.bincount(k_classes[i])))
+#             # ========================
 
         return y_pred
 
@@ -78,12 +82,15 @@ class KNNClassifier(object):
         # - Full credit will be given for a fully vectorized implementation
         #   (zero explicit loops). Hint: Open the expression (a-b)^2.
 
-        dists = torch.tensor([])
+        
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        l2_dists=(x_test.numpy()**2).sum(axis=1)[:,np.newaxis] + (self.x_train.numpy()**2).sum(axis=1)
+        l2_dists-= 2*(x_test.numpy().dot(self.x_train.numpy().T))
+        l2_dists = np.sqrt(l2_dists)
+                       
         # ========================
 
-        return dists
+        return torch.from_numpy(l2_dists)
 
 
 def accuracy(y: Tensor, y_pred: Tensor):
@@ -96,12 +103,15 @@ def accuracy(y: Tensor, y_pred: Tensor):
     """
     assert y.shape == y_pred.shape
     assert y.dim() == 1
+    
+    print(y_pred)
 
     # TODO: Calculate prediction accuracy. Don't use an explicit loop.
 
     accuracy = None
     # ====== YOUR CODE: ======
-    raise NotImplementedError()
+    accuracy = (y_pred == y)
+
     # ========================
 
     return accuracy
