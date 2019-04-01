@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 from torch import Tensor
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset, DataLoader,sampler
 
 import cs236605.dataloader_utils as dataloader_utils
 from . import dataloaders
@@ -49,7 +49,6 @@ class KNNClassifier(object):
         k_nearest=np.argsort(dist_matrix)[:,list(range(self.k))]
         
         k_classes = np.vectorize(lambda x:self.y_train[x])(k_nearest)
-        
 
         for i in range(n_test):
 #             # TODO:
@@ -57,7 +56,7 @@ class KNNClassifier(object):
 #             # - Set y_pred[i] to the most common class among them
 
 #             # ====== YOUR CODE: ======
-            y_pred[i]=int(np.argmax(np.bincount(k_classes[i])))
+              y_pred[i]= torch.tensor((np.argmax(np.bincount(k_classes[i]))))
 #             # ========================
 
         return y_pred
@@ -104,17 +103,15 @@ def accuracy(y: Tensor, y_pred: Tensor):
     assert y.shape == y_pred.shape
     assert y.dim() == 1
     
-    print(y_pred)
 
     # TODO: Calculate prediction accuracy. Don't use an explicit loop.
 
     accuracy = None
     # ====== YOUR CODE: ======
     accuracy = (y_pred == y)
-
     # ========================
 
-    return accuracy
+    return accuracy.sum().item() / y.shape[0]
 
 
 def find_best_k(ds_train: Dataset, k_choices, num_folds):
@@ -130,9 +127,34 @@ def find_best_k(ds_train: Dataset, k_choices, num_folds):
     """
 
     accuracies = []
+    
+    indices = [list(range((int(j*(len(ds_train)/(num_folds)))) , min( len(ds_train) , int((j+1) * (len(ds_train) / num_folds)) ) )) for j in range(num_folds)]
 
+    
+    flatten = lambda l: [item for sublist in l for item in sublist]        
     for i, k in enumerate(k_choices):
         model = KNNClassifier(k)
+        model_acc=[]
+        for j in range(num_folds):
+            train_indices = indices[0:j] + indices[j+1:]
+            train_indices = np.array(flatten(train_indices))
+            validate_indices = np.array(indices[j])
+            train_sampler=sampler.SubsetRandomSampler(train_indices)
+            valid_sampler=sampler.SubsetRandomSampler(validate_indices)
+
+                                                                                                                                                        
+            dl_train=DataLoader(ds_train,batch_size=32,sampler=train_sampler)                                                                                                                              
+            dl_valid=DataLoader(ds_train,batch_size=32,sampler=valid_sampler)
+        
+            model.train(dl_train)
+            x_valid, y_valid = dataloader_utils.flatten(dl_valid)
+            
+            y_pred=model.predict(x_valid)
+            acc=accuracy(y_valid,y_pred)
+            model_acc.append(acc)
+        accuracies.append(model_acc)    
+        
+        
 
         # TODO: Train model num_folds times with different train/val data.
         # Don't use any third-party libraries.
@@ -141,7 +163,7 @@ def find_best_k(ds_train: Dataset, k_choices, num_folds):
         # different split each iteration), or implement something else.
 
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        
         # ========================
 
     best_k_idx = np.argmax([np.mean(acc) for acc in accuracies])

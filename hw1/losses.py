@@ -55,12 +55,21 @@ class SVMHingeLoss(ClassifierLoss):
 
         loss = None
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        
+
+        correct_class_values=x_scores[list(range(y.shape[0])),y]
+
+        A=self.delta+(y_pred.T-correct_class_values).T
+        
+        loss = A[A>0].sum()
         # ========================
 
         # TODO: Save what you need for gradient calculation in self.grad_ctx
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        self.grad_ctx["x"]=x
+        self.grad_ctx["y"]=y
+        self.grad_ctx["x_scores"]=x_scores
+        self.grad_ctx["y_predicted"]=y_predicted
         # ========================
 
         return loss

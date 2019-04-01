@@ -29,7 +29,7 @@ class BiasTrick(object):
         # Make sure to use the same data type.
 
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        return torch.cat((tensor,torch.tensor(1)),dim=1) 
         # ========================
 
 

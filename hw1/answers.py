@@ -9,7 +9,6 @@ math (delimited with $$).
 # Part 2 answers
 
 part2_q1 = r"""
-**Your answer:**
 
 
 Write your answer using **markdown** and $\LaTeX$:
