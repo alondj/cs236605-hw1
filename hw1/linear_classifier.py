@@ -22,7 +22,7 @@ class LinearClassifier(object):
         # Initialize it from a normal dist with zero mean and the given std.
 
         self.weights = torch.empty(self.n_features, self.n_classes)
-        nn.init.normal_(self.weights,mean=0,std=weight_std)
+        torch.nn.init.normal_(self.weights,mean=0,std=weight_std)
         # ====== YOUR CODE: ======
       
         # ========================
@@ -45,8 +45,7 @@ class LinearClassifier(object):
         class_scores = torch.mm(x,self.weights)
         y_pred = torch.zeros(x.shape[0], dtype=torch.int64)
         
-        for i in range(x.shape[0]):
-             y_pred[i]= torch.tensor((np.argmax(np.bincount(class_scores[i]))))
+        _,y_pred=torch.max(class_scores,1)
         # ====== YOUR CODE: ======
        
         # ========================

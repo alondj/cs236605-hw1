@@ -29,7 +29,8 @@ class BiasTrick(object):
         # Make sure to use the same data type.
 
         # ====== YOUR CODE: ======
-        return torch.cat((tensor,torch.tensor(1)),dim=1) 
+        A = torch.tensor(1,dtype=torch.float)
+        return torch.cat((tensor,A.reshape(1)))
         # ========================
 
 

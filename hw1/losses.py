@@ -58,8 +58,16 @@ class SVMHingeLoss(ClassifierLoss):
         
 
         correct_class_values=x_scores[list(range(y.shape[0])),y]
-
-        A=self.delta+(y_pred.T-correct_class_values).T
+        
+        print("correct class\n",y[0])
+        print("correct class values\n",correct_class_values[0])
+        print("predicted values\n",x_scores[0])
+        
+        A=self.delta+x_scores-correct_class_values
+        
+        print("subtract correct class values from each row\n",A[0])
+        
+        print(A.shape)
         
         loss = A[A>0].sum()
         # ========================
