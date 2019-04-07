@@ -55,42 +55,36 @@ class SVMHingeLoss(ClassifierLoss):
 
         loss = None
         # ====== YOUR CODE: ======
+        correct_classes_scores=x_scores[range(x_scores.shape[0]),y]
+#         print(f"correct_class_scores\n{correct_classes_scores}")
+        loss=x_scores - correct_classes_scores.reshape(-1,1) + self.delta
+        loss[range(x_scores.shape[0]),y]-=self.delta
+#         print(f"after diff\n{loss}")
+        loss = torch.clamp(loss,min=0)
+#         print(f"after max\n{loss}")
         
 
-        correct_class_values=x_scores[list(range(y.shape[0])),y]
         
-        print("correct class\n",y[0])
-        print("correct class values\n",correct_class_values[0])
-        print("predicted values\n",x_scores[0])
-        
-        A=self.delta+x_scores-correct_class_values
-        
-        print("subtract correct class values from each row\n",A[0])
-        
-        print(A.shape)
-        
-        loss = A[A>0].sum()
         # ========================
 
         # TODO: Save what you need for gradient calculation in self.grad_ctx
         # ====== YOUR CODE: ======
         self.grad_ctx["x"]=x
-        self.grad_ctx["y"]=y
-        self.grad_ctx["x_scores"]=x_scores
-        self.grad_ctx["y_predicted"]=y_predicted
+        self.grad_ctx["loss_matrix"]=loss
         # ========================
 
-        return loss
+        return loss.sum() / x_scores.shape[0]
 
     def grad(self):
 
         # TODO: Implement SVM loss gradient calculation
         # Same notes as above. Hint: Use the matrix M from above, based on
         # it create a matrix G such that X^T * G is the gradient.
-
         grad = None
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        X_mask = torch.zeros(self.grad_ctx["loss_matrix"].shape)
+        X_mask[self.grad_ctx["loss_matrix"] > 0] = 1
+        grad = torch.mm(self.grad_ctx["x"].t(),X_mask)
         # ========================
 
         return grad

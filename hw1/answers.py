@@ -25,15 +25,9 @@ An equation: $e^{i\pi} -1 = 0$
 # Part 3 answers
 
 part3_q1 = r"""
-**Your answer:**
-
-
-Write your answer using **markdown** and $\LaTeX$:
-```python
-# A code block
-a = 2
-```
-An equation: $e^{i\pi} -1 = 0$
+the hinge loss assures that the score of the correct label will larger by at least delta
+from all othe label. because we return the label with the heighest score it does not matter
+which value of delta we choose as long as its positive.
 
 """
 
