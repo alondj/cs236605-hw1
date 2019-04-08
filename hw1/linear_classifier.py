@@ -97,18 +97,35 @@ class LinearClassifier(object):
             #
             # Don't forget to add a regularization term to the loss, using the
             # weight_decay parameter.
-
-            total_correct = 0
-            average_loss = 0
-#           train per batch
+            count=0.0
+            avg_loss=0.0
+            avg_accuracy=0.0
+#             update weights
             for x_train,y_train in dl_train:
-                y_pred = self.predict(x_train)
-                
-#           validate
-
-            # ====== YOUR CODE: ======
-            raise NotImplementedError()
-            # ========================
+                y_pred,x_scores = self.predict(x_train)
+                loss = loss_fn(x_train,y_train,x_scores,y_pred) 
+                grad = loss_fn.grad()
+                self.weights -= learn_rate*(grad + weight_decay*self.weights)
+                count+=1
+                avg_loss+=(loss + 0.5*weight_decay*torch.norm(self.weights))
+                avg_accuracy+= self.evaluate_accuracy(y_train,y_pred)
+            
+            train_res.accuracy.append(avg_accuracy / count)
+            train_res.loss.append(avg_loss.item() / count)
+            
+            count=0.0
+            avg_loss=0.0
+            avg_accuracy=0.0
+#             validation step
+            for x_valid,y_valid in dl_valid:
+                y_pred,x_scores = self.predict(x_valid)
+                avg_loss += loss_fn(x_valid,y_valid,x_scores,y_pred) + 0.5*weight_decay*torch.norm(self.weights)
+                avg_accuracy+= self.evaluate_accuracy(y_valid,y_pred)
+                count+=1
+            
+            valid_res.accuracy.append(avg_accuracy / count)
+            valid_res.loss.append(avg_loss.item() / count)
+            
             print('.', end='')
 
         print('')
@@ -127,7 +144,9 @@ class LinearClassifier(object):
         # The output shape should be (n_classes, C, H, W).
 
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
-        # ========================
 
-        return w_images
+        # ========================
+        w=self.weights
+        if has_bias:
+            w = w[:w.shape[0]-1]
+        return w.reshape(self.n_classes,*img_shape)

@@ -32,29 +32,15 @@ which value of delta we choose as long as its positive.
 """
 
 part3_q2 = r"""
-**Your answer:**
-
-
-Write your answer using **markdown** and $\LaTeX$:
-```python
-# A code block
-a = 2
-```
-An equation: $e^{i\pi} -1 = 0$
-
+1.the linear classifier is trying to find a linear seperator(weights) that seperates between the different classes as good as possible, trying to come close as much as possible to one that seperates them with a distance of delta. 
+2. KNN doesnt seperate between the classes in a linear way he just classifies the exampels according to arbitrery partitions of the domain.
 """
 
 part3_q3 = r"""
-**Your answer:**
+we would say the learning rate is not too high because if it was then we would have seen spikes in the loss and accuracy metrics and slower convergence due to irratic changes in the model parameters.
+also it's not too low because we see that the curve is steep and 4 epochs is enough for reasonable loss and accuracy values.
 
-
-Write your answer using **markdown** and $\LaTeX$:
-```python
-# A code block
-a = 2
-```
-An equation: $e^{i\pi} -1 = 0$
-
+in regard to the over/under fitting of the model we would say that the model is slightly overffited on the training set because after epoch 5 we can see the margin between the graphs(before they were almont identical) thus we assume that we start to generalize less on the validtaion set and hinder the improvement of the validation loss and accuracy 
 """
 
 # ==============

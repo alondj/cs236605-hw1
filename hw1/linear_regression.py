@@ -27,10 +27,10 @@ class LinearRegressor(BaseEstimator, RegressorMixin):
         check_is_fitted(self, 'weights_')
 
         # TODO: Calculate the model prediction, y_pred
-
-        y_pred = None
+        
+        y_pred = self.predict(X)
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+      
         # ========================
 
         return y_pred
@@ -74,9 +74,9 @@ class BiasTrickTransformer(BaseEstimator, TransformerMixin):
 
         xb = None
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        xb=np.concatenate((np.ones(X.shape[0],dtype=np.int32).reshape(-1,1),X),axis=1)
         # ========================
-
+      
         return xb
 
 
@@ -136,10 +136,9 @@ def top_correlated_features(df: DataFrame, target_feature, n=5):
     # TODO: Calculate correlations with target and sort features by it
 
     # ====== YOUR CODE: ======
-    raise NotImplementedError()
+    top_n=df.corr()[target_feature].drop([target_feature]).abs().nlargest(n)
     # ========================
-
-    return top_n_features, top_n_corr
+    return list(top_n.index), list(top_n.values)
 
 
 def cv_best_hyperparams(model: BaseEstimator, X, y, k_folds,
