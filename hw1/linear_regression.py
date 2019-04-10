@@ -28,11 +28,10 @@ class LinearRegressor(BaseEstimator, RegressorMixin):
 
         # TODO: Calculate the model prediction, y_pred
         
-        y_pred = self.predict(X)
+        
         # ====== YOUR CODE: ======
-      
+        y_pred = np.matmul(X,self.weights_)
         # ========================
-
         return y_pred
 
     def fit(self, X, y):
@@ -45,10 +44,13 @@ class LinearRegressor(BaseEstimator, RegressorMixin):
 
         # TODO: Calculate the optimal weights using the closed-form solution
         # Use only numpy functions.
-
         w_opt = None
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        N=1.0*X.shape[0]
+        bias_mask=np.identity(X.shape[1])
+        bias_mask[0][0]=0
+        w_opt=np.linalg.inv(X.T.dot(X)+ N*self.reg_lambda*mask).dot(X.T.dot(y))
+        
         # ========================
 
         self.weights_ = w_opt
@@ -74,7 +76,7 @@ class BiasTrickTransformer(BaseEstimator, TransformerMixin):
 
         xb = None
         # ====== YOUR CODE: ======
-        xb=np.concatenate((np.ones(X.shape[0],dtype=np.int32).reshape(-1,1),X),axis=1)
+        xb=np.concatenate((np.ones(X.shape[0],dtype=np.float32).reshape(-1,1),X),axis=1)
         # ========================
       
         return xb
@@ -90,7 +92,7 @@ class BostonFeaturesTransformer(BaseEstimator, TransformerMixin):
         # TODO: Your custom initialization, if needed
         # Add any hyperparameters you need and save them as above
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        
         # ========================
 
     def fit(self, X, y=None):
@@ -103,16 +105,16 @@ class BostonFeaturesTransformer(BaseEstimator, TransformerMixin):
         :returns: Matrix of shape (n_samples, n_output_features_).
         """
         X = check_array(X)
-        # check_is_fitted(self, ['n_features_', 'n_output_features_'])
+#         check_is_fitted(self, ['n_features_', 'n_output_features_'])
 
         # TODO: Transform the features of X into new features in X_transformed
         # Note: You can count on the order of features in the Boston dataset
         # (this class is "Boston-specific"). For example X[:,1] is the second
         # feature ('ZN').
-
+        print(X.shape)
         X_transformed = None
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        X_transformed=X
         # ========================
 
         return X_transformed
