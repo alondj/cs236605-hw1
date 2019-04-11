@@ -9,15 +9,9 @@ math (delimited with $$).
 # Part 2 answers
 
 part2_q1 = r"""
-
-
-Write your answer using **markdown** and $\LaTeX$:
-```python
-# A code block
-a = 2
-```
-An equation: $e^{i\pi} -1 = 0$
-
+we can see that for a realy small k, eg. 1 ,we will overffit because we will predict blindly according to the training examples.
+if k is very large we will consider too much data points and that can introduce noise to the prediction in the exterme our prediction can be seen as a majority vote accros the entire dataset.
+the sweet spot is somewhere in the middle where we consider a reasonable amount of close examples to determine a datapoint classification
 """
 # ==============
 
@@ -49,29 +43,17 @@ in regard to the over/under fitting of the model we would say that the model is 
 # Part 4 answers
 
 part4_q1 = r"""
-**Your answer:**
-
-
-Write your answer using **markdown** and $\LaTeX$:
-```python
-# A code block
-a = 2
-```
-An equation: $e^{i\pi} -1 = 0$
+we would like to see that all points are along the line y=0
+meaning that the difference between the pridected value and the actual value is almost 0.
 
 """
 
 part4_q2 = r"""
-**Your answer:**
+because the regularization loss is less effected by lambda compared to w, eg. small change in lambda will drasticly changge the loss.
+but in logspace small change in the value will yield much larger results enabling us to travese a large interval quickly.
 
-
-Write your answer using **markdown** and $\LaTeX$:
-```python
-# A code block
-a = 2
-```
-An equation: $e^{i\pi} -1 = 0$
-
+in total we tried 60 combinations of hyperParams:
+3 polynom degrees and 20 lambda values
 """
 
 # ==============

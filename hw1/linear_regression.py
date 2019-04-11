@@ -5,7 +5,7 @@ from sklearn.preprocessing import PolynomialFeatures
 from pandas import DataFrame
 from sklearn.utils import check_array
 from sklearn.utils.validation import check_is_fitted, check_X_y
-
+from sklearn.model_selection import KFold
 
 class LinearRegressor(BaseEstimator, RegressorMixin):
     """
@@ -143,10 +143,7 @@ class BostonFeaturesTransformer(BaseEstimator, TransformerMixin):
 #         ptration 10
 #         indus 2
 #         tax 9
-        
-        X_transformed = X[:,[]]
-
-        return X_transformed
+        return PolynomialFeatures(self.degree).fit_transform(X)
 
 
 def top_correlated_features(df: DataFrame, target_feature, n=5):
@@ -200,7 +197,26 @@ def cv_best_hyperparams(model: BaseEstimator, X, y, k_folds,
     # - You can use MSE or R^2 as a score.
 
     # ====== YOUR CODE: ======
-    raise NotImplementedError()
+    kf = KFold(k_folds)
+    count=0
+    best_params ={"bostonfeaturestransformer__degree":2,"linearregressor__reg_lambda":0.1}
+    best_loss = np.inf
+    for deg in degree_range:
+        for lam in lambda_range:
+            model.set_params(bostonfeaturestransformer__degree=deg,linearregressor__reg_lambda=lam)
+            avg_mse=0.0
+            count+=1
+            
+            for train_idx,test_idx in kf.split(X):
+                x_train=X[train_idx]
+                y_train=y[train_idx]
+                model.fit(x_train, y_train)
+                y_pred = model.predict(X[test_idx])
+                avg_mse += np.square(y[test_idx] - y_pred).sum() /(2*X.shape[0])
+            avg_mse /= k_folds
+            if avg_mse < best_loss:
+                best_loss = avg_mse
+                best_params = {"bostonfeaturestransformer__degree":deg,"linearregressor__reg_lambda":lam}          
     # ========================
-
+    print(count)
     return best_params
