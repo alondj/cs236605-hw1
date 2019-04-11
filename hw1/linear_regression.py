@@ -41,7 +41,6 @@ class LinearRegressor(BaseEstimator, RegressorMixin):
         :param y: A tensor of shape (N,) where N is the batch size.
         """
         X, y = check_X_y(X, y)
-
         # TODO: Calculate the optimal weights using the closed-form solution
         # Use only numpy functions.
         w_opt = None
@@ -49,7 +48,7 @@ class LinearRegressor(BaseEstimator, RegressorMixin):
         N=1.0*X.shape[0]
         bias_mask=np.identity(X.shape[1])
         bias_mask[0][0]=0
-        w_opt=np.linalg.inv(X.T.dot(X)+ N*self.reg_lambda*mask).dot(X.T.dot(y))
+        w_opt=np.linalg.inv(X.T.dot(X)+ N*self.reg_lambda*bias_mask).dot(X.T.dot(y))
         
         # ========================
 
@@ -111,11 +110,41 @@ class BostonFeaturesTransformer(BaseEstimator, TransformerMixin):
         # Note: You can count on the order of features in the Boston dataset
         # (this class is "Boston-specific"). For example X[:,1] is the second
         # feature ('ZN').
-        print(X.shape)
-        X_transformed = None
-        # ====== YOUR CODE: ======
-        X_transformed=X
-        # ========================
+
+#         TO ADD
+#         1/crime_rate
+#         1/lstat
+#         rm-5
+#         log DIS
+#         sqrt(100 -AGE)
+        
+#         TO REMOVE
+#         CHAS
+#         crime_rate
+#         lstat
+#         rm
+#         DIS
+#         AGE
+#         RAD
+        
+#         X_transformed = np.delete(X,3,1)#remove CHAS
+#         X_transformed = np.delete(X_transformed,7,1)#remove CR
+#         # ====== YOUR CODE: ======
+#         X_transformed[:,10] =1.0 / X_transformed[:,10]#lstat
+#         X_transformed[:,0] =1.0 / X_transformed[:,0]#CR
+#         X_transformed[:,4] =X_transformed[:,4]-5#RM
+#         X_transformed[:,5] =np.log(X_transformed[:,5])#DIS
+#         X_transformed[:,6] =np.sqrt(100-X_transformed[:,6])#AGE
+#         # ========================
+
+
+#         Lstat 12
+#         rm 5
+#         ptration 10
+#         indus 2
+#         tax 9
+        
+        X_transformed = X[:,[]]
 
         return X_transformed
 
