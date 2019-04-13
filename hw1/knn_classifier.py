@@ -22,7 +22,6 @@ class KNNClassifier(object):
             return tuples).
         :return: self
         """
-
         x_train, y_train = dataloader_utils.flatten(dl_train)
         self.x_train = x_train
         self.y_train = y_train
@@ -47,7 +46,6 @@ class KNNClassifier(object):
         n_test = x_test.shape[0]
         y_pred = torch.zeros(n_test, dtype=torch.int64)
         k_nearest=np.argsort(dist_matrix)[:,list(range(self.k))]
-        
         k_classes = np.vectorize(lambda x:self.y_train[x])(k_nearest)
 
         for i in range(n_test):

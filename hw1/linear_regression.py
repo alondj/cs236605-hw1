@@ -130,19 +130,14 @@ class BostonFeaturesTransformer(BaseEstimator, TransformerMixin):
 #         X_transformed = np.delete(X,3,1)#remove CHAS
 #         X_transformed = np.delete(X_transformed,7,1)#remove CR
 #         # ====== YOUR CODE: ======
-#         X_transformed[:,10] =1.0 / X_transformed[:,10]#lstat
+        X[:,13] =1.0 / X[:,13]#lstat
 #         X_transformed[:,0] =1.0 / X_transformed[:,0]#CR
 #         X_transformed[:,4] =X_transformed[:,4]-5#RM
 #         X_transformed[:,5] =np.log(X_transformed[:,5])#DIS
 #         X_transformed[:,6] =np.sqrt(100-X_transformed[:,6])#AGE
 #         # ========================
 
-
-#         Lstat 12
-#         rm 5
-#         ptration 10
-#         indus 2
-#         tax 9
+        
         return PolynomialFeatures(self.degree).fit_transform(X)
 
 
